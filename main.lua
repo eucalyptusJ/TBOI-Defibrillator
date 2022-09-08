@@ -1,9 +1,17 @@
 local mod = RegisterMod("Defibrillator Trinket", 1)
 local sndManager = SFXManager()
 local TRINKET_DEFRIBRILLATOR = Isaac.GetTrinketIdByName("Defibrillator")
+local defibrillatorDesc = "Instead of losing HP upon taking damage, lose active item charges#If the held active has 6 or more charges, 3 are lost when hit#If it has 12 charges, 4 are lost#If it has less than 6, 2 are lost#If it has less than 2 charges, damage will not be prevented"
 
-if EID then 
-    EID:addTrinket(TRINKET_DEFRIBRILLATOR, "If Isaac is holding an active item, charges will be removed upon taking damage and health will be unaffected#If the held active has 6 or more charges, 3 are lost when hit#If it has 12 charges, 4 are lost#If it has less than 6, 2 are lost#If it has less than 2 charges, damage will not be prevented")
+if EID then
+    EID:addTrinket(TRINKET_DEFRIBRILLATOR, defibrillatorDesc)
+end
+
+if Encyclopedia then
+    Encyclopedia.AddTrinket({
+      ID = TRINKET_DEFRIBRILLATOR,
+      WikiDesc = Encyclopedia.EIDtoWiki(defibrillatorDesc),
+    })
 end
 
 local chargeValues = {
