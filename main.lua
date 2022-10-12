@@ -25,24 +25,29 @@ function mod:onHit(entity, amount, flags, source, countdown)
         local player = entity:ToPlayer()
     if not player then return end
     if player:HasTrinket(TRINKET_DEFRIBRILLATOR) then
-        if player:GetActiveCharge() > 1 and flags ~= DamageFlag.DAMAGE_FAKE then
-            local charge = player:GetActiveCharge()
+        for i = 0, 2 do
+            if player:GetActiveCharge(i) > 1 and flags ~= DamageFlag.DAMAGE_FAKE then
+                local charge = player:GetActiveCharge(i)
+                local chargeLost = false
 
-            if player:GetBatteryCharge() > 0 then -- Accounts for 2nd charge bar granted by The Battery, etc
-                charge = charge + player:GetBatteryCharge()
+            
+                if player:GetBatteryCharge(i) > 0 and chargeLost ~= true then -- Accounts for 2nd charge bar granted by The Battery, etc
+                    charge = charge + player:GetBatteryCharge(i)
+                end
+                
+                if charge >= 6 and charge < 12 then
+                    player:SetActiveCharge(charge - chargeValues.sixCharge, i)
+                elseif charge >= 12 then 
+                    player:SetActiveCharge(charge - chargeValues.twelveCharge, i)
+                else
+                    player:SetActiveCharge(charge - chargeValues.minCharge, i)
+                end
+
+                chargeLost = true
+                sndManager:Play(SoundEffect.SOUND_BATTERYDISCHARGE)
+                player:TakeDamage(amount, DamageFlag.DAMAGE_FAKE, source, countdown)
+                if chargeLost == true then return end
             end
-
-            if charge >= 6 and charge < 12 then
-                player:SetActiveCharge(charge - chargeValues.sixCharge)
-            elseif charge >= 12 then 
-                player:SetActiveCharge(charge - chargeValues.twelveCharge)
-            else
-                player:SetActiveCharge(charge - chargeValues.minCharge)
-            end
-
-            sndManager:Play(SoundEffect.SOUND_BATTERYDISCHARGE)
-            player:TakeDamage(amount, DamageFlag.DAMAGE_FAKE, source, countdown)
-            return false
         end
     end
 end
