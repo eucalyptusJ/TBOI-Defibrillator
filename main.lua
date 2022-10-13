@@ -37,7 +37,7 @@ function mod:onHit(entity, amount, flags, source, countdown)
                 
                 if charge >= 6 and charge < 12 then
                     player:SetActiveCharge(charge - chargeValues.sixCharge, i)
-                elseif charge >= 12 then 
+                elseif charge >= 12 then
                     player:SetActiveCharge(charge - chargeValues.twelveCharge, i)
                 else
                     player:SetActiveCharge(charge - chargeValues.minCharge, i)
@@ -46,7 +46,7 @@ function mod:onHit(entity, amount, flags, source, countdown)
                 chargeLost = true
                 sndManager:Play(SoundEffect.SOUND_BATTERYDISCHARGE)
                 player:TakeDamage(amount, DamageFlag.DAMAGE_FAKE, source, countdown)
-                if chargeLost == true then return end
+                if chargeLost == true then return false end
             end
         end
     end
